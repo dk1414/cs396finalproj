@@ -1,0 +1,76 @@
+%
+% File acl2020.tex
+%
+%% Based on the style files for ACL 2020, which were
+%% Based on the style files for ACL 2018, NAACL 2018/19, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2020}
+\usepackage{times}
+\usepackage{latexsym}
+\renewcommand{\UrlFont}{\ttfamily\small}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+%\aclfinalcopy % Uncomment this line for the final submission
+%\def\aclpaperid{***} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B\textsc{ib}\TeX}
+
+\title{Music Artist Embeddings}
+
+\author{First Author \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{email@domain} \\\And
+  Second Author \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{email@domain} \\}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This paper will describe the process of collecting a song lyric corpus by webscraping lyric and music genre data, and using it to extract BERT embeddings in a way that attempts to capture semantically relevant information about a music artist so that artist/genre similarity tasks may be performed using classic clustering techniques.
+\end{abstract}
+
+\section{Intro}
+
+The question that this project addresses is that given a corpus containing lyric data for different music artists, is it possible to capture meaningful information about each artist by extracting BERT embeddings for an artist's lyrics, and creating an "artist embedding". This question is important because it would allow many different music recommendation tasks to be done using simple unsupervised learning algorithms as opposed to complex and hard to train neural networks.
+
+\section{Data}
+
+The data set that was used for this project was one that was scraped from the internet specifically for this project. It includes lyrics for 2000 different music artists' top 10 songs, as well as each artist's main music genre. The genres and music artists were scraped from \href{https://en.wikipedia.org/wiki/Lists\_of\_musicians}{https://en.wikipedia.org/wiki/Lists\_of\_musicians}. The number artists scraped from Wikipedia is much higher than the 2000 included in this data set. This is because the amount of lyric data that was gathered was limited by time constraints. Additionally, only 8 different genres of artists were able to be gathered because of time constraints. The lyric data for each of the 2000 artists was gathered by scraping \href{https://genius.com/}{https://genius.com/}. This data was stored in a csv file with columns for the artist name, genre, number of songs scraped, and lyrics.
+
+\section{Methods}
+ This section will discuss the methods used to gather the song lyric corpus, methods used to create artist embeddings, and the methods used to evaluate the embeddings.
+\subsection{Data Gathering}
+A much larger portion of this project than anticipated was dedicated to finding a usable data set. There exist large data sets containing artist data, song lyrics, and other metadata. However, these data sets are either in the bag-of-words format, or they are restricted due to copyright issues. This being the case, for this project to be possible, it was necessary to gather a custom data set. As mentioned in the previous section, the artist and respective genre data was scraped from Wikipedia, and the lyric data was scraped from Genius. Because multiple websites were used, the work needed to gather and clean this data was comprehensive. First over 100 lists of artists were scraped from Wikipedia, as well as the genres each artist belongs to. Because of the sheer number of artists gathered, it was impossible to gather lyric data on all of them. This resulted in roughly 2000 artists being selected to gather lyric data on. Next, for each of the 200 artists, hyperlinks to lyric websites for their top 10 songs were gathered using the Genius API. Finally, lyric data was scraped from all 10 of the websites containing lyrics for the top 10 songs. The Genius API was the main factor that contributed the time constraints that were mentioned earlier, as it severely limited the number of requests that were able to be made for each artist. This resulted in lyric data only being able to be scraped at a rate of about 10 songs every 1-2 minutes.
+
+\subsection{Artist Embeddings}
+The artist embeddings used in this project were made using the BERT transformer model. For each artist, an embedding was created by taking the lyric data, tokenizing it, running it through the BERT model, and extracting the hidden state of the BERT model. Because each artist has lyric data for their top 10 songs, the lyric data had to be split into several lists of tokens as the BERT model can only take inputs with a maximum size of 512 tokens. This usually resulted in each artists having 4 different BERT embeddings. These 4 embeddings were created by taking the average of the second to last hidden layer for each token for each of these token sequences. These 4 embeddings were averaged to create a single artist embedding. Unfortunately, artist embeddings for all 2000 of the artists contained in the data base were not able to be computed, again due to time constraints. Only 500 artist embeddings were able to be calculated, even after adjusting the code so it could be run in multiple threads.
+
+
+
+\end{document}

@@ -25,3 +25,5 @@ finaldata.csv: edited version of lyricsdata.csv
 
 writeup.pdf: final writeup for this project
 
+Also I could not figure out how to add my name as the author in the .tex file for the writeup, thats why is says anonymous
+
